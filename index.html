@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advay Pixels — Digital Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050805;
+    --bg2: #090d09;
+    --bg3: #0e130e;
+    --card: #0b100b;
+    --border: rgba(120,220,80,0.1);
+    --accent: #7bdc3e;
+    --accent2: #a5f06a;
+    --blue: #3b82f6;
+    --text: #e4f5e0;
+    --muted: #4a6644;
+    --muted2: #7aaa70;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  /* ─── CUSTOM CURSOR ─────────────────────── */
+  * { cursor: none !important; }
+
+  #cursor-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, background 0.2s;
+    box-shadow: 0 0 10px rgba(123,220,62,0.8);
+  }
+
+  #cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid rgba(123,220,62,0.5);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, border-color 0.3s, transform 0.08s;
+  }
+
+  body.cursor-hover #cursor-dot {
+    width: 12px; height: 12px;
+    background: var(--accent2);
+    box-shadow: 0 0 20px rgba(123,220,62,1);
+  }
+
+  body.cursor-hover #cursor-ring {
+    width: 52px; height: 52px;
+    border-color: rgba(123,220,62,0.8);
+  }
+
+  @media (pointer: coarse) {
+    * { cursor: auto !important; }
+    #cursor-dot, #cursor-ring { display: none; }
+  }
+
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ─── SCROLLBAR ─────────────────────────── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+  /* ─── NOISE OVERLAY ─────────────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.35;
+  }
+
+  /* ─── NAV ────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(8,10,14,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+
+  .logo {
+    font-family: var(--font-head);
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    line-height: 1;
+  }
+
+  .logo span {
+    color: var(--accent);
+    text-shadow: 0 0 12px rgba(123,220,62,0.6);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--muted2);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.25s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-decoration: none;
+  }
+
+  .nav-cta:hover {
+    background: var(--accent2);
+    box-shadow: 0 0 20px rgba(123,220,62,0.4);
+    transform: translateY(-1px);
+  }
+
+  /* hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--text); border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  /* mobile menu */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 72px; left: 0; right: 0;
+    background: rgba(8,10,14,0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem clamp(1.5rem, 5vw, 4rem);
+    z-index: 999;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: var(--muted2); text-decoration: none;
+    font-size: 1rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--accent); }
+
+  /* ─── HERO ───────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+    padding-top: 72px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 60% 40%, rgba(123,220,62,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 20% 80%, rgba(123,220,62,0.04) 0%, transparent 50%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(123,220,62,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(123,220,62,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 70%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(123,220,62,0.1);
+    border: 1px solid rgba(123,220,62,0.25);
+    border-radius: 100px;
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent2);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-badge .dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+
+  h1 {
+    font-family: var(--font-head);
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: transparent;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--muted2);
+    max-width: 560px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 0.9rem 2rem;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(123,220,62,0.5), 0 0 60px rgba(123,220,62,0.15);
+  }
+  .btn-primary:hover::before { opacity: 1; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 0.9rem 2rem;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(232,124,62,0.4);
+    background: rgba(232,124,62,0.05);
+    color: var(--accent2);
+  }
+
+  .hero-stats {
+    position: absolute;
+    right: clamp(1.5rem, 5vw, 4rem);
+    bottom: clamp(2rem, 6vw, 5rem);
+    display: flex;
+    gap: 2.5rem;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  .stat { text-align: right; }
+
+  .stat-num {
+    font-family: var(--font-head);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .stat-num span { color: var(--accent); }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── SECTIONS ───────────────────────────── */
+  section {
+    padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem);
+  }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 1rem;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 20px; height: 1px;
+    background: var(--accent);
+  }
+
+  .section-title {
+    font-family: var(--font-head);
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .section-title em {
+    font-style: normal;
+    color: transparent;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .section-sub {
+    color: var(--muted2);
+    font-size: 1.05rem;
+    max-width: 540px;
+    font-weight: 300;
+    margin-bottom: 3.5rem;
+    line-height: 1.7;
+  }
+
+  /* ─── SERVICES GRID ──────────────────────── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .service-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+
+  .service-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(123,220,62,0.06), transparent);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+
+  .service-card:hover {
+    border-color: rgba(123,220,62,0.3);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(123,220,62,0.1);
+  }
+
+  .service-card:hover::before, .service-card:hover::after { opacity: 1; }
+
+  .card-icon {
+    width: 48px; height: 48px;
+    background: rgba(123,220,62,0.1);
+    border: 1px solid rgba(123,220,62,0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 1.25rem;
+    transition: all 0.35s;
+  }
+
+  .service-card:hover .card-icon {
+    background: rgba(123,220,62,0.2);
+    box-shadow: 0 0 20px rgba(123,220,62,0.2);
+  }
+
+  .card-title {
+    font-family: var(--font-head);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .card-desc {
+    font-size: 0.875rem;
+    color: var(--muted2);
+    line-height: 1.65;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.25rem;
+  }
+
+  .tag {
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.25rem 0.65rem;
+    letter-spacing: 0.02em;
+    transition: all 0.25s;
+  }
+
+  .service-card:hover .tag {
+    border-color: rgba(123,220,62,0.2);
+    color: var(--muted2);
+  }
+
+  /* ─── DIVIDER ────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0 clamp(1.5rem, 5vw, 4rem);
+  }
+
+  /* ─── FEATURED SECTION ───────────────────── */
+  .featured-section {
+    background: var(--bg2);
+  }
+
+  /* ─── MARQUEE ────────────────────────────── */
+  .marquee-wrap {
+    padding: 2rem 0;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 3rem;
+    animation: marquee 25s linear infinite;
+    white-space: nowrap;
+  }
+
+  .marquee-item {
+    font-family: var(--font-head);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  .marquee-dot {
+    width: 4px; height: 4px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ─── PROCESS ────────────────────────────── */
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+    position: relative;
+  }
+
+  .process-steps::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), var(--border), transparent);
+  }
+
+  .step {
+    text-align: center;
+    position: relative;
+    padding-top: 0.5rem;
+  }
+
+  .step-num {
+    width: 56px; height: 56px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin: 0 auto 1.25rem;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s;
+  }
+
+  .step:hover .step-num {
+    background: rgba(123,220,62,0.15);
+    border-color: rgba(123,220,62,0.4);
+    box-shadow: 0 0 20px rgba(123,220,62,0.2);
+  }
+
+  .step-title {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .step-desc {
+    font-size: 0.85rem;
+    color: var(--muted2);
+    line-height: 1.6;
+  }
+
+  /* ─── CONTACT ────────────────────────────── */
+  .contact-section {
+    background: var(--bg2);
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .contact-info h3 {
+    font-family: var(--font-head);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--muted2);
+    letter-spacing: -0.01em;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .contact-link:hover {
+    border-color: rgba(123,220,62,0.3);
+    background: rgba(123,220,62,0.05);
+    transform: translateX(4px);
+  }
+
+  .contact-link-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .contact-link-icon.wa { background: rgba(37,211,102,0.15); }
+  .contact-link-icon.em { background: rgba(232,124,62,0.15); }
+  .contact-link-icon.ig { background: rgba(225,48,108,0.15); }
+  .contact-link-icon.li { background: rgba(10,102,194,0.15); }
+
+  .contact-link-text strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .contact-link-text span {
+    font-size: 0.8rem;
+    color: var(--muted2);
+  }
+
+  /* ─── FORM ───────────────────────────────── */
+  .contact-form {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+  }
+
+  .form-title {
+    font-family: var(--font-head);
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .form-sub {
+    font-size: 0.875rem;
+    color: var(--muted2);
+    margin-bottom: 2rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--muted2);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    transition: all 0.25s;
+    outline: none;
+    appearance: none;
+  }
+
+  .form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    cursor: pointer;
+  }
+
+  .form-group select option {
+    background: var(--bg3);
+    color: var(--text);
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: rgba(123,220,62,0.5);
+    background: rgba(123,220,62,0.04);
+    box-shadow: 0 0 0 3px rgba(123,220,62,0.08);
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--muted);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+  }
+
+  .form-submit {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .form-submit:hover {
+    background: var(--accent2);
+    box-shadow: 0 8px 30px rgba(123,220,62,0.4);
+    transform: translateY(-2px);
+  }
+
+  .form-submit:active { transform: translateY(0); }
+
+  /* ─── FOOTER ─────────────────────────────── */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 3.5rem clamp(1.5rem, 5vw, 4rem) 2rem;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr repeat(3, 1fr);
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-brand .logo {
+    display: inline-flex;
+    margin-bottom: 1rem;
+  }
+
+  .footer-brand p {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 260px;
+  }
+
+  .footer-col h4 {
+    font-family: var(--font-head);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted2);
+    margin-bottom: 1.25rem;
+  }
+
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 0.65rem; }
+  .footer-col a {
+    font-size: 0.875rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.25s;
+  }
+  .footer-col a:hover { color: var(--accent); }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-bottom p {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .footer-bottom span { color: var(--accent); }
+
+  .social-row {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .social-btn {
+    width: 36px; height: 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: var(--muted2);
+    text-decoration: none;
+    transition: all 0.25s;
+    cursor: pointer;
+  }
+
+  .social-btn:hover {
+    border-color: rgba(232,124,62,0.4);
+    color: var(--accent);
+    background: rgba(232,124,62,0.08);
+  }
+
+  /* ─── SCROLL REVEAL ──────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ─── TOAST ──────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--card);
+    border: 1px solid rgba(123,220,62,0.3);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text);
+    z-index: 9998;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast-icon { font-size: 1.1rem; }
+
+  /* ─── RESPONSIVE ─────────────────────────── */
+  @media (max-width: 768px) {
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+
+    .hero-stats {
+      position: static;
+      margin-top: 3rem;
+      justify-content: flex-start;
+    }
+
+    .process-steps::before { display: none; }
+
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .form-row { grid-template-columns: 1fr; }
+
+    .footer-top {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .footer-brand { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 480px) {
+    .footer-top { grid-template-columns: 1fr; }
+    .hero-stats { gap: 1.5rem; }
+    .contact-form { padding: 1.5rem; }
+  }
+  /* ─── LEGAL MODALS ──────────────────────── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(6px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .modal-box {
+    background: var(--bg2);
+    border: 1px solid rgba(123,220,62,0.2);
+    border-radius: 20px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 2.5rem;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.23,1,0.32,1);
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  .modal-overlay.open .modal-box { transform: translateY(0); }
+  .modal-close {
+    position: absolute;
+    top: 1.25rem; right: 1.25rem;
+    background: rgba(123,220,62,0.1);
+    border: 1px solid rgba(123,220,62,0.2);
+    color: var(--accent);
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { background: rgba(123,220,62,0.2); }
+  .modal-box h2 {
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+  }
+  .modal-box .modal-date {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-box h3 {
+    font-family: var(--font-head);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 1.5rem 0 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .modal-box p {
+    font-size: 0.875rem;
+    color: var(--muted2);
+    line-height: 1.75;
+    margin-bottom: 0.75rem;
+  }
+  .modal-box ul {
+    list-style: none;
+    margin-bottom: 0.75rem;
+  }
+  .modal-box ul li {
+    font-size: 0.875rem;
+    color: var(--muted2);
+    line-height: 1.75;
+    padding-left: 1.1rem;
+    position: relative;
+  }
+  .modal-box ul li::before {
+    content: '▸';
+    position: absolute; left: 0;
+    color: var(--accent);
+    font-size: 0.7rem;
+    top: 0.3rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── CUSTOM CURSOR ─────────────────────── -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- ─── NAV ─────────────────────────────────── -->
+<nav id="nav">
+  <a href="#" class="logo">ADVAY<span>PIXELS</span></a>
+  <ul class="nav-links">
+    <li><a href="#web">Web Dev</a></li>
+    <li><a href="#social">Social</a></li>
+    <li><a href="#video">Video</a></li>
+    <li><a href="#design">Design</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Start Project →</a>
+  <div class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#web" onclick="closeMenu()">Web Development</a>
+  <a href="#social" onclick="closeMenu()">Social Media</a>
+  <a href="#video" onclick="closeMenu()">Video Editing</a>
+  <a href="#design" onclick="closeMenu()">Graphic Design</a>
+  <a href="#contact" onclick="closeMenu()">Contact Us</a>
+  <a href="#contact" class="btn-primary" onclick="closeMenu()">Start Your Project →</a>
+</div>
+
+<!-- ─── HERO ─────────────────────────────────── -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Available for new projects
+    </div>
+    <h1>We Build Digital<br><em>Brands That Grow</em><br>Your Business.</h1>
+    <p class="hero-sub">Full-spectrum digital agency crafting powerful online identities — from stunning websites to viral content strategies that convert.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Start Your Project →</a>
+      <a href="#web" class="btn-ghost">Explore Services</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">120<span>+</span></div>
+      <div class="stat-label">Projects Done</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">98<span>%</span></div>
+      <div class="stat-label">Satisfaction</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">5<span>★</span></div>
+      <div class="stat-label">Avg. Rating</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MARQUEE ───────────────────────────────── -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Web Development <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Brand Identity <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Social Media <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Motion Graphics <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Logo Design <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Video Editing <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Ad Campaigns <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Content Strategy <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Web Development <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Brand Identity <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Social Media <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Motion Graphics <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Logo Design <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Video Editing <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Ad Campaigns <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Content Strategy <span class="marquee-dot"></span></span>
+  </div>
+</div>
+
+<!-- ─── WEB DEVELOPMENT ───────────────────────── -->
+<section id="web">
+  <div class="section-label">01 — Service</div>
+  <h2 class="section-title reveal">Web <em>Development</em></h2>
+  <p class="section-sub reveal reveal-delay-1">We craft fast, beautiful, and conversion-optimised websites that make your brand impossible to ignore.</p>
+  <div class="services-grid">
+    <div class="service-card reveal reveal-delay-1">
+      <div class="card-icon">🏢</div>
+      <div class="card-title">Business Websites</div>
+      <div class="card-desc">Corporate & professional websites designed to establish authority and drive leads for your business.</div>
+      <div class="card-tags">
+        <span class="tag">CMS Integration</span>
+        <span class="tag">SEO Optimised</span>
+        <span class="tag">Fast Loading</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="card-icon">🎨</div>
+      <div class="card-title">Portfolio Websites</div>
+      <div class="card-desc">Showcase your work with a stunning personal portfolio that captures attention and wins clients.</div>
+      <div class="card-tags">
+        <span class="tag">Custom Design</span>
+        <span class="tag">Animations</span>
+        <span class="tag">Mobile First</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">Landing Pages</div>
+      <div class="card-desc">High-converting landing pages engineered to turn visitors into customers with strategic design.</div>
+      <div class="card-tags">
+        <span class="tag">A/B Testing</span>
+        <span class="tag">Conversion CRO</span>
+        <span class="tag">Analytics</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-4">
+      <div class="card-icon">📱</div>
+      <div class="card-title">Responsive Design</div>
+      <div class="card-desc">Pixel-perfect responsive websites that look and perform flawlessly on every device and screen size.</div>
+      <div class="card-tags">
+        <span class="tag">Mobile Optimised</span>
+        <span class="tag">Cross-Browser</span>
+        <span class="tag">Fast Performance</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── SOCIAL MEDIA ──────────────────────────── -->
+<section id="social" class="featured-section">
+  <div class="section-label">02 — Service</div>
+  <h2 class="section-title reveal">Social Media <em>Marketing</em></h2>
+  <p class="section-sub reveal reveal-delay-1">Strategic social media management that builds engaged communities and turns followers into paying customers.</p>
+  <div class="services-grid">
+    <div class="service-card reveal reveal-delay-1">
+      <div class="card-icon">📈</div>
+      <div class="card-title">Instagram Growth</div>
+      <div class="card-desc">Organic growth strategies, hashtag research, and engagement techniques that multiply your audience.</div>
+      <div class="card-tags">
+        <span class="tag">Hashtag Research</span>
+        <span class="tag">Engagement</span>
+        <span class="tag">Analytics</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="card-icon">🗂️</div>
+      <div class="card-title">Content Strategy</div>
+      <div class="card-desc">Cohesive content calendars and brand storytelling frameworks that resonate with your target audience.</div>
+      <div class="card-tags">
+        <span class="tag">Content Calendars</span>
+        <span class="tag">Brand Voice</span>
+        <span class="tag">Storytelling</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="card-icon">⚙️</div>
+      <div class="card-title">Social Management</div>
+      <div class="card-desc">Full-service management of your social channels — posting, responding, and growing your presence daily.</div>
+      <div class="card-tags">
+        <span class="tag">Daily Posting</span>
+        <span class="tag">Community Mgmt</span>
+        <span class="tag">Monthly Reports</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-4">
+      <div class="card-icon">📣</div>
+      <div class="card-title">Ad Campaigns</div>
+      <div class="card-desc">Data-driven paid social campaigns on Instagram, Facebook & TikTok designed to maximise your ROI.</div>
+      <div class="card-tags">
+        <span class="tag">Meta Ads</span>
+        <span class="tag">Targeting</span>
+        <span class="tag">ROI Tracking</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── VIDEO EDITING ─────────────────────────── -->
+<section id="video">
+  <div class="section-label">03 — Service</div>
+  <h2 class="section-title reveal">Video <em>Editing</em></h2>
+  <p class="section-sub reveal reveal-delay-1">Professional video production that tells your story cinematically and keeps your audience hooked from frame one.</p>
+  <div class="services-grid">
+    <div class="service-card reveal reveal-delay-1">
+      <div class="card-icon">▶️</div>
+      <div class="card-title">YouTube Editing</div>
+      <div class="card-desc">Long-form YouTube content edited for retention — dynamic cuts, captions, b-roll, and engaging intros.</div>
+      <div class="card-tags">
+        <span class="tag">Colour Grading</span>
+        <span class="tag">Captions</span>
+        <span class="tag">Thumbnails</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="card-icon">🎬</div>
+      <div class="card-title">Instagram Reels</div>
+      <div class="card-desc">Viral-ready short-form video content crafted to stop the scroll and maximise your reach on Reels & TikTok.</div>
+      <div class="card-tags">
+        <span class="tag">Trending Audio</span>
+        <span class="tag">Fast-Paced Cuts</span>
+        <span class="tag">Effects</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="card-icon">🎥</div>
+      <div class="card-title">Promotional Videos</div>
+      <div class="card-desc">High-impact brand and product videos that communicate your value proposition with clarity and style.</div>
+      <div class="card-tags">
+        <span class="tag">Brand Film</span>
+        <span class="tag">Product Promo</span>
+        <span class="tag">Testimonials</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-4">
+      <div class="card-icon">✨</div>
+      <div class="card-title">Motion Graphics</div>
+      <div class="card-desc">Animated lower-thirds, logo reveals, kinetic typography and custom motion elements for your brand.</div>
+      <div class="card-tags">
+        <span class="tag">Logo Animation</span>
+        <span class="tag">Lower Thirds</span>
+        <span class="tag">Typography</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── GRAPHIC DESIGN ─────────────────────────── -->
+<section id="design" class="featured-section">
+  <div class="section-label">04 — Service</div>
+  <h2 class="section-title reveal">Graphic <em>Design</em></h2>
+  <p class="section-sub reveal reveal-delay-1">Visual identities and creative assets that make your brand instantly recognisable and impossible to forget.</p>
+  <div class="services-grid">
+    <div class="service-card reveal reveal-delay-1">
+      <div class="card-icon">✏️</div>
+      <div class="card-title">Logo Design</div>
+      <div class="card-desc">Strategic logo design that captures your brand essence — versatile, timeless, and built to scale.</div>
+      <div class="card-tags">
+        <span class="tag">Multiple Concepts</span>
+        <span class="tag">Vector Files</span>
+        <span class="tag">Style Guide</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="card-icon">💼</div>
+      <div class="card-title">Brand Identity</div>
+      <div class="card-desc">Full brand identity systems including colour palettes, typography, patterns and brand guidelines.</div>
+      <div class="card-tags">
+        <span class="tag">Brand Manual</span>
+        <span class="tag">Colour Systems</span>
+        <span class="tag">Typography</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="card-icon">🖼️</div>
+      <div class="card-title">Social Media Graphics</div>
+      <div class="card-desc">Scroll-stopping post templates, story graphics and content assets designed for maximum engagement.</div>
+      <div class="card-tags">
+        <span class="tag">Post Templates</span>
+        <span class="tag">Story Designs</span>
+        <span class="tag">Banners</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-4">
+      <div class="card-icon">🖱️</div>
+      <div class="card-title">Posters & Thumbnails</div>
+      <div class="card-desc">Event posters, YouTube thumbnails, and digital flyers that command attention and drive clicks.</div>
+      <div class="card-tags">
+        <span class="tag">Event Posters</span>
+        <span class="tag">YT Thumbnails</span>
+        <span class="tag">Print Ready</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROCESS ───────────────────────────────── -->
+<section>
+  <div class="section-label">Our Process</div>
+  <h2 class="section-title reveal">How We <em>Work</em></h2>
+  <p class="section-sub reveal reveal-delay-1">A streamlined process built for clarity, collaboration and on-time delivery.</p>
+  <div class="process-steps">
+    <div class="step reveal reveal-delay-1">
+      <div class="step-num">01</div>
+      <div class="step-title">Discovery Call</div>
+      <div class="step-desc">We understand your brand, goals, and audience to align on the right strategy.</div>
+    </div>
+    <div class="step reveal reveal-delay-2">
+      <div class="step-num">02</div>
+      <div class="step-title">Strategy & Plan</div>
+      <div class="step-desc">We craft a tailored project roadmap with clear deliverables and timelines.</div>
+    </div>
+    <div class="step reveal reveal-delay-3">
+      <div class="step-num">03</div>
+      <div class="step-title">Design & Build</div>
+      <div class="step-desc">Our team brings the strategy to life with premium creative execution.</div>
+    </div>
+    <div class="step reveal reveal-delay-4">
+      <div class="step-num">04</div>
+      <div class="step-title">Launch & Grow</div>
+      <div class="step-desc">We deliver, refine, and support your growth long after launch day.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── CONTACT ───────────────────────────────── -->
+<section id="contact" class="contact-section">
+  <div class="section-label">05 — Contact</div>
+  <h2 class="section-title reveal">Let's Build Something <em>Great</em></h2>
+  <p class="section-sub reveal reveal-delay-1">Ready to take your digital presence to the next level? Drop us a message and we'll get back to you within 24 hours.</p>
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <h3>Reach Out Directly</h3>
+      <div class="contact-links">
+        <div class="contact-link" onclick="window.open('https://wa.me/919546908012','_blank')">
+          <div class="contact-link-icon wa">💬</div>
+          <div class="contact-link-text">
+            <strong>WhatsApp</strong>
+            <span>+91 95469 08012</span>
+          </div>
+          <span style="margin-left:auto;color:var(--muted);font-size:0.8rem;">→</span>
+        </div>
+        <div class="contact-link" onclick="window.location='mailto:advaypixels@gmail.com'">
+          <div class="contact-link-icon em">✉️</div>
+          <div class="contact-link-text">
+            <strong>Email Us</strong>
+            <span>advaypixels@gmail.com</span>
+          </div>
+          <span style="margin-left:auto;color:var(--muted);font-size:0.8rem;">→</span>
+        </div>
+        <div class="contact-link" onclick="window.open('https://instagram.com/advay_pixels','_blank')">
+          <div class="contact-link-icon ig">📸</div>
+          <div class="contact-link-text">
+            <strong>Instagram</strong>
+            <span>@advay_pixels</span>
+          </div>
+          <span style="margin-left:auto;color:var(--muted);font-size:0.8rem;">→</span>
+        </div>
+        <div class="contact-link" onclick="window.open('https://linkedin.com','_blank')">
+          <div class="contact-link-icon li">💼</div>
+          <div class="contact-link-text">
+            <strong>LinkedIn</strong>
+            <span>Advay Pixels</span>
+          </div>
+          <span style="margin-left:auto;color:var(--muted);font-size:0.8rem;">→</span>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;">
+        <div style="font-size:0.8rem;color:var(--muted2);margin-bottom:0.4rem;font-weight:500;">Response Time</div>
+        <div style="font-family:var(--font-head);font-size:1.3rem;font-weight:800;color:var(--accent);">Under 24 Hours</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:0.3rem;">Mon – Sat, 9am – 8pm IST</div>
+      </div>
+    </div>
+    <div class="contact-form reveal reveal-delay-2">
+      <div class="form-title">Start Your Project</div>
+      <div class="form-sub">Fill out the form and we'll prepare a custom proposal for you.</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="fname" placeholder="Alex Johnson">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="femail" placeholder="alex@company.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Service Needed</label>
+        <select id="fservice">
+          <option value="" disabled selected>Select a service...</option>
+          <option>Web Development</option>
+          <option>Social Media Marketing</option>
+          <option>Video Editing</option>
+          <option>Graphic Design</option>
+          <option>Full Digital Package</option>
+          <option>Other / Custom</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Budget Range</label>
+        <select id="fbudget">
+          <option value="" disabled selected>Select budget range...</option>
+          <option>Under ₹2,500</option>
+          <option>₹2,500 – ₹5,000</option>
+          <option>₹5,000 – ₹10,000</option>
+          <option>₹10,000 – ₹20,000</option>
+          <option>₹20,000 – ₹30,000</option>
+          <option>Above ₹30,000</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Project Details</label>
+        <textarea id="fmessage" placeholder="Tell us about your project, goals, and any specific requirements..."></textarea>
+      </div>
+      <button class="form-submit" onclick="submitForm()">
+        Send Message →
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="logo">ADVAY<span>PIXELS</span></a>
+      <p>A pixel-perfect digital agency crafting powerful online identities — from stunning websites to viral content strategies that convert.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#web">Web Development</a></li>
+        <li><a href="#social">Social Media</a></li>
+        <li><a href="#video">Video Editing</a></li>
+        <li><a href="#design">Graphic Design</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#home">About Us</a></li>
+        <li><a href="#web">Portfolio</a></li>
+        <li><a href="#contact">Pricing</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#" onclick="openModal('privacy'); return false;">Privacy Policy</a></li>
+        <li><a href="#" onclick="openModal('terms'); return false;">Terms of Service</a></li>
+        <li><a href="#" onclick="openModal('cookie'); return false;">Cookie Policy</a></li>
+        <li><a href="#" onclick="openModal('refund'); return false;">Refund Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Advay Pixels. Crafted with <span>♥</span> for ambitious brands.</p>
+    <div class="social-row">
+      <a class="social-btn" title="Instagram" href="https://instagram.com/advay_pixels" target="_blank">📸</a>
+      <a class="social-btn" title="LinkedIn" href="#" target="_blank">💼</a>
+      <a class="social-btn" title="WhatsApp" href="https://wa.me/919546908012" target="_blank">💬</a>
+      <a class="social-btn" title="Email" href="mailto:advaypixels@gmail.com">✉️</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── LEGAL MODALS ──────────────────────────── -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- ─── TOAST ─────────────────────────────────── -->
+<div class="toast" id="toast">
+  <span class="toast-icon">✅</span>
+  <span>Message sent! We'll be in touch within 24 hours.</span>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Mobile menu
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Nav scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('nav');
+    if (window.scrollY > 40) {
+      nav.style.borderBottomColor = 'rgba(232,124,62,0.12)';
+    } else {
+      nav.style.borderBottomColor = 'rgba(255,255,255,0.07)';
+    }
+  });
+
+  // Form submit — Formspree
+  async function submitForm() {
+    const name = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    const service = document.getElementById('fservice').value;
+    const budget = document.getElementById('fbudget').value;
+    const message = document.getElementById('fmessage').value.trim();
+
+    if (!name || !email || !service || !message) {
+      showToast('⚠️', 'Please fill in all required fields.');
+      return;
+    }
+    if (!email.includes('@')) {
+      showToast('⚠️', 'Please enter a valid email address.');
+      return;
+    }
+
+    const btn = document.querySelector('.form-submit');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('https://formspree.io/f/mvzwkzqg', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ name, email, service, budget, message })
+      });
+
+      if (res.ok) {
+        showToast('✅', "Message sent! We'll be in touch within 24 hours.");
+        document.getElementById('fname').value = '';
+        document.getElementById('femail').value = '';
+        document.getElementById('fservice').selectedIndex = 0;
+        document.getElementById('fbudget').selectedIndex = 0;
+        document.getElementById('fmessage').value = '';
+      } else {
+        showToast('❌', 'Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      showToast('❌', 'Network error. Please try again.');
+    }
+
+    btn.textContent = 'Send Message →';
+    btn.disabled = false;
+  }
+
+  // Custom cursor
+  const dot  = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let ringX = 0, ringY = 0, mouseX = 0, mouseY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    dot.style.left = mouseX + 'px';
+    dot.style.top  = mouseY + 'px';
+  });
+
+  (function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top  = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  })();
+
+  document.querySelectorAll('a, button, .service-card, .contact-link, .nav-cta, .social-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+  });
+
+
+  function showToast(icon, msg) {
+    const t = document.getElementById('toast');
+    t.querySelector('.toast-icon').textContent = icon;
+    t.querySelector('span:last-child').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  // Close mobile menu on outside click
+  document.addEventListener("click", (e) => {
+    const menu = document.getElementById("mobileMenu");
+    if (!e.target.closest("nav") && !e.target.closest("#mobileMenu")) {
+      menu.classList.remove("open");
+    }
+  });
+
+  // Legal Modals
+  const modalData = {
+    privacy: `
+      <h2>Privacy Policy</h2>
+      <div class="modal-date">Last updated: January 1, 2025</div>
+      <p>At Advay Pixels, we are committed to protecting your personal information and your right to privacy.</p>
+      <h3>Information We Collect</h3>
+      <p>We collect information you provide directly to us when you fill out our contact form, including your name, email address, and project details.</p>
+      <ul>
+        <li>Name and email address via contact form</li>
+        <li>Project details and requirements you share with us</li>
+        <li>Communication history between you and our team</li>
+      </ul>
+      <h3>How We Use Your Information</h3>
+      <ul>
+        <li>To respond to your inquiries and provide project quotes</li>
+        <li>To deliver the services you have requested</li>
+        <li>To send project updates and important communications</li>
+        <li>To improve our website and services</li>
+      </ul>
+      <h3>Data Sharing</h3>
+      <p>We do not sell, trade, or rent your personal information to third parties. We may share data only with trusted service providers strictly to operate our business.</p>
+      <h3>Data Security</h3>
+      <p>We implement appropriate security measures to protect your personal information. However, no method of transmission over the internet is 100% secure.</p>
+      <h3>Contact Us</h3>
+      <p>If you have questions about this Privacy Policy, contact us at advaypixels@gmail.com or WhatsApp: +91 95469 08012.</p>
+    `,
+    terms: `
+      <h2>Terms of Service</h2>
+      <div class="modal-date">Last updated: January 1, 2025</div>
+      <p>By engaging with Advay Pixels for any digital service, you agree to the following terms and conditions.</p>
+      <h3>Services Provided</h3>
+      <p>Advay Pixels provides web development, social media marketing, video editing, and graphic design services as discussed and agreed upon before project commencement.</p>
+      <h3>Payment Terms</h3>
+      <ul>
+        <li>50% advance payment is required before work begins</li>
+        <li>Remaining 50% is due upon project completion before final file delivery</li>
+        <li>Payments accepted via UPI, bank transfer, or as mutually agreed</li>
+      </ul>
+      <h3>Revisions</h3>
+      <ul>
+        <li>Each project includes up to 3 rounds of revisions</li>
+        <li>Additional revisions will be charged separately</li>
+        <li>Revision requests must be submitted within 7 days of delivery</li>
+      </ul>
+      <h3>Intellectual Property</h3>
+      <p>Upon full payment, all rights to the final deliverables are transferred to the client. Advay Pixels retains the right to showcase the work in our portfolio unless requested otherwise.</p>
+      <h3>Turnaround Time</h3>
+      <p>Timelines are discussed and agreed upon before each project. Delays caused by the client may affect the delivery date.</p>
+      <h3>Termination</h3>
+      <p>Either party may terminate the project with written notice. Payment is due for all work completed up to the termination date.</p>
+    `,
+    cookie: `
+      <h2>Cookie Policy</h2>
+      <div class="modal-date">Last updated: January 1, 2025</div>
+      <p>This Cookie Policy explains how Advay Pixels uses cookies and similar tracking technologies on our website.</p>
+      <h3>What Are Cookies?</h3>
+      <p>Cookies are small text files stored on your device when you visit a website. They help websites remember your preferences and improve your browsing experience.</p>
+      <h3>Cookies We Use</h3>
+      <ul>
+        <li><strong style="color:var(--text)">Essential Cookies:</strong> Required for the website to function properly</li>
+        <li><strong style="color:var(--text)">Analytics Cookies:</strong> Help us understand how visitors interact with our site</li>
+        <li><strong style="color:var(--text)">Preference Cookies:</strong> Remember your settings for a better experience</li>
+      </ul>
+      <h3>Third-Party Cookies</h3>
+      <p>We use Formspree for our contact form, which may set its own cookies to process form submissions securely.</p>
+      <h3>Managing Cookies</h3>
+      <p>You can control and delete cookies through your browser settings. Note that disabling certain cookies may affect website functionality.</p>
+      <h3>Contact</h3>
+      <p>For cookie-related queries, reach us at advaypixels@gmail.com.</p>
+    `,
+    refund: `
+      <h2>Refund Policy</h2>
+      <div class="modal-date">Last updated: January 1, 2025</div>
+      <p>At Advay Pixels, we strive to deliver high-quality work that meets your expectations. Please read our refund policy carefully.</p>
+      <h3>Advance Payment</h3>
+      <p>The 50% advance payment is non-refundable once work has commenced, as it covers the time and resources allocated to your project.</p>
+      <h3>Eligibility for Refund</h3>
+      <ul>
+        <li>If we fail to begin work within the agreed timeline, a full refund will be issued</li>
+        <li>If the final delivery is significantly different from the agreed scope, a partial or full refund may be considered</li>
+        <li>Refund requests must be raised within 7 days of project delivery</li>
+      </ul>
+      <h3>Non-Refundable Situations</h3>
+      <ul>
+        <li>Change of mind after work has started</li>
+        <li>Delays caused by the client (late feedback, unresponsiveness)</li>
+        <li>Completed projects where revisions were already provided</li>
+        <li>Requests made after the 7-day review window</li>
+      </ul>
+      <h3>Refund Process</h3>
+      <p>Approved refunds will be processed within 5–7 business days to the original payment method.</p>
+      <h3>Disputes</h3>
+      <p>For any disputes, contact us at advaypixels@gmail.com or WhatsApp +91 95469 08012. We are committed to resolving issues fairly.</p>
+    `
+  };
+
+  function openModal(type) {
+    document.getElementById('modalContent').innerHTML = modalData[type];
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+</script>
+</body>
+</html>
